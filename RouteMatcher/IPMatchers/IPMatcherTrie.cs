@@ -61,7 +61,7 @@ namespace RouteMatcher.IPMatchers
 				var children = root.Children;
 				var index = Convert.ToByte(bit);
 
-				if (children?[index] != null)
+				if (children?[index] is not null)
 				{
 					if (!Equals(root.Result, default(Rule)))
 					{

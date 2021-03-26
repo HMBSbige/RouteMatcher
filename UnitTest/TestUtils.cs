@@ -28,5 +28,28 @@ namespace UnitTest
 			Assert.AreEqual(Rule.Direct, tree.Match(IPAddress.Parse(@"192.168.20.15")));
 			Assert.AreEqual(Rule.Proxy, tree.Match(IPAddress.Parse(@"192.168.20.19")));
 		}
+
+		public static void TestDomainMatcher(IDomainMatcher<string, Rule> tree)
+		{
+			tree.Update(@"a.b.c.cn", Rule.Block);
+			tree.Update(@"b.c.cn", Rule.Proxy);
+			tree.Update(@"cn", Rule.Direct);
+			tree.Update(@"b.com", Rule.Proxy);
+			tree.Update(@"ab.com", Rule.Block);
+
+			Assert.AreEqual(Rule.Unknown, tree.Match(@"com"));
+			Assert.AreEqual(Rule.Proxy, tree.Match(@"b.com"));
+			Assert.AreEqual(Rule.Block, tree.Match(@"ab.com"));
+			Assert.AreEqual(Rule.Proxy, tree.Match(@"d.b.com"));
+			Assert.AreEqual(Rule.Proxy, tree.Match(@"a.d.b.com"));
+
+			Assert.AreEqual(Rule.Direct, tree.Match(@"a.b.cn"));
+			Assert.AreEqual(Rule.Direct, tree.Match(@"c.cn"));
+			Assert.AreEqual(Rule.Direct, tree.Match(@"d.cn"));
+			Assert.AreEqual(Rule.Proxy, tree.Match(@"b.c.cn"));
+			Assert.AreEqual(Rule.Block, tree.Match(@"a.b.c.cn"));
+
+			Assert.AreEqual(Rule.Unknown, tree.Match(@"1234.org"));
+		}
 	}
 }
