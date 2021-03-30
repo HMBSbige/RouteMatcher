@@ -7,7 +7,7 @@ namespace RouteMatcher.DomainMatchers
 {
 	public class DomainMatcherHash : IDomainMatcher<string, Rule>
 	{
-		private readonly Dictionary<string, Rule> _matcher = new();
+		private readonly Dictionary<string, Rule> _matcher = new(StringComparer.OrdinalIgnoreCase);
 
 		public void Update(string data, Rule result)
 		{
@@ -31,7 +31,7 @@ namespace RouteMatcher.DomainMatchers
 					break;
 				}
 
-				data = new string(data.AsSpan(index + 1));
+				data = data[(index + 1)..];
 			}
 
 			return default;
@@ -42,7 +42,7 @@ namespace RouteMatcher.DomainMatchers
 		/// </summary>
 		private static string Init(string input)
 		{
-			return input.ToLower().Trim('.');
+			return input.Trim('.');
 		}
 	}
 }
