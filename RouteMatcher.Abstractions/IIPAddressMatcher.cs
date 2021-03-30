@@ -1,7 +1,9 @@
+using System.Net;
+
 namespace RouteMatcher.Abstractions
 {
-	public interface IIPAddressMatcher<in TType, TResult> : IMatcher<TType, TResult>
+	public interface IIPAddressMatcher<TResult> : IMatcher<IPAddress, TResult> where TResult : struct
 	{
-		void Update(TType data, byte netmask, TResult result);
+		void Update(IPAddress data, byte netmask, TResult result);
 	}
 }

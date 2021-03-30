@@ -1,5 +1,4 @@
 using RouteMatcher.Abstractions;
-using RouteMatcher.Enums;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -8,18 +7,18 @@ using System.Text;
 
 namespace RouteMatcher.IPMatchers
 {
-	public class IPMatcherHash : IIPAddressMatcher<IPAddress, Rule>
+	public class IPMatcherHash<TResult> : IIPAddressMatcher<TResult> where TResult : struct
 	{
-		private readonly Dictionary<string, Rule> _matcher = new();
+		private readonly Dictionary<string, TResult> _matcher = new();
 		private readonly byte[] _buffer = new byte[16 + 16 * 8];
 
-		public void Update(IPAddress data, byte netmask, Rule result)
+		public void Update(IPAddress data, byte netmask, TResult result)
 		{
 			var str = Init(data, netmask);
 			_matcher[str] = result;
 		}
 
-		public Rule Match(IPAddress data)
+		public TResult Match(IPAddress data)
 		{
 			var str = Init(data, data.AddressFamily == AddressFamily.InterNetwork ? (byte)32 : (byte)128);
 

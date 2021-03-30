@@ -1,24 +1,22 @@
 using RouteMatcher.Abstractions;
-using RouteMatcher.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace RouteMatcher.DomainMatchers
 {
-	public class DomainMatcherHash : IDomainMatcher<string, Rule>
+	public class DomainMatcherHash<TResult> : IDomainMatcher<TResult> where TResult : struct
 	{
-		private readonly Dictionary<string, Rule> _matcher = new(StringComparer.OrdinalIgnoreCase);
+		private readonly Dictionary<string, TResult> _matcher = new(StringComparer.OrdinalIgnoreCase);
 
-		public void Update(string data, Rule result)
+		public void Update(string data, TResult result)
 		{
 			data = Init(data);
 			_matcher[data] = result;
 		}
 
-		public Rule Match(string data)
+		public TResult Match(string data)
 		{
 			data = Init(data);
-
 			while (true)
 			{
 				if (_matcher.TryGetValue(data, out var res))

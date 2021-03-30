@@ -1,7 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using RouteMatcher.Abstractions;
 using RouteMatcher.DomainMatchers;
-using RouteMatcher.Enums;
 using System.IO;
 
 namespace RouteMatcher.Benchmark
@@ -9,8 +8,8 @@ namespace RouteMatcher.Benchmark
 	[MemoryDiagnoser, RankColumn]
 	public class DomainMatcherBenchmark
 	{
-		private readonly DomainMatcherHash _hash;
-		private readonly DomainMatcherTrie _trie;
+		private readonly DomainMatcherHash<Rule> _hash;
+		private readonly DomainMatcherTrie<Rule> _trie;
 
 		public DomainMatcherBenchmark()
 		{
@@ -19,15 +18,15 @@ namespace RouteMatcher.Benchmark
 		}
 
 		[Benchmark]
-		public DomainMatcherHash LoadHash()
+		public DomainMatcherHash<Rule> LoadHash()
 		{
-			return LoadBase<DomainMatcherHash>();
+			return LoadBase<DomainMatcherHash<Rule>>();
 		}
 
 		[Benchmark]
-		public DomainMatcherTrie LoadTrie()
+		public DomainMatcherTrie<Rule> LoadTrie()
 		{
-			return LoadBase<DomainMatcherTrie>();
+			return LoadBase<DomainMatcherTrie<Rule>>();
 		}
 
 		[Benchmark]
@@ -59,7 +58,7 @@ namespace RouteMatcher.Benchmark
 			tree.Match(@"1234.org");
 		}
 
-		private static T LoadBase<T>() where T : IDomainMatcher<string, Rule>, new()
+		private static T LoadBase<T>() where T : IDomainMatcher<Rule>, new()
 		{
 			var res = new T();
 			var lines = File.ReadAllLines(@"chndomains.txt");

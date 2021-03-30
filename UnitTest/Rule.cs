@@ -1,4 +1,4 @@
-namespace RouteMatcher.Enums
+namespace UnitTest
 {
 	public enum Rule : byte
 	{

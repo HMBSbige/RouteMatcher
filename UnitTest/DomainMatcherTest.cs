@@ -11,13 +11,13 @@ namespace UnitTest
 		[TestMethod]
 		public void Hash()
 		{
-			TestUtils.TestDomainMatcher(new DomainMatcherHash());
+			TestUtils.TestDomainMatcher(new DomainMatcherHash<Rule>());
 		}
 
 		[TestMethod]
 		public void Trie()
 		{
-			TestUtils.TestDomainMatcher(new DomainMatcherTrie());
+			TestUtils.TestDomainMatcher(new DomainMatcherTrie<Rule>());
 		}
 
 		[TestMethod]

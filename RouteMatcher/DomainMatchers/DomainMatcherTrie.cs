@@ -1,17 +1,16 @@
 using RouteMatcher.Abstractions;
-using RouteMatcher.Enums;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RouteMatcher.DomainMatchers
 {
-	public class DomainMatcherTrie : IDomainMatcher<string, Rule>
+	public class DomainMatcherTrie<TResult> : IDomainMatcher<TResult> where TResult : struct
 	{
 		private const int CharsCount = 26 + 10 + 1 + 1; // a-z,0-9,-,.
 
 		private class Node
 		{
-			public Rule Result { get; set; }
+			public TResult Result { get; set; }
 			public Node?[]? Children { get; set; }
 
 			[MemberNotNull(nameof(Children))]
@@ -23,7 +22,7 @@ namespace RouteMatcher.DomainMatchers
 
 		private readonly Node _root = new();
 
-		public void Update(string data, Rule result)
+		public void Update(string data, TResult result)
 		{
 			data = Init(data);
 
@@ -48,7 +47,7 @@ namespace RouteMatcher.DomainMatchers
 			root.Result = result;
 		}
 
-		public Rule Match(string data)
+		public TResult Match(string data)
 		{
 			data = Init(data);
 
@@ -62,7 +61,7 @@ namespace RouteMatcher.DomainMatchers
 
 				if (children?[index] is not null)
 				{
-					if (index == CharsCount - 1 && !Equals(root.Result, default(Rule)))
+					if (index == CharsCount - 1 && !Equals(root.Result, default(TResult)))
 					{
 						cacheRule = root.Result;
 					}
@@ -74,7 +73,7 @@ namespace RouteMatcher.DomainMatchers
 				}
 			}
 
-			if (!Equals(root.Result, default(Rule)))
+			if (!Equals(root.Result, default(TResult)))
 			{
 				cacheRule = root.Result;
 			}

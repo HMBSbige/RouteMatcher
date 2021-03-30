@@ -1,7 +1,7 @@
 namespace RouteMatcher.Abstractions
 {
-	public interface IDomainMatcher<in TType, TResult> : IMatcher<TType, TResult>
+	public interface IDomainMatcher<TResult> : IMatcher<string, TResult> where TResult : struct
 	{
-		void Update(TType data, TResult result);
+		void Update(string data, TResult result);
 	}
 }

@@ -11,13 +11,13 @@ namespace UnitTest
 		[TestMethod]
 		public void Hash()
 		{
-			TestUtils.TestIpMatcher(new IPMatcherHash());
+			TestUtils.TestIpMatcher(new IPMatcherHash<Rule>());
 		}
 
 		[TestMethod]
 		public void Trie()
 		{
-			TestUtils.TestIpMatcher(new IPMatcherTrie());
+			TestUtils.TestIpMatcher(new IPMatcherTrie<Rule>());
 		}
 
 		[TestMethod]

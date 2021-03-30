@@ -1,6 +1,5 @@
 using BenchmarkDotNet.Attributes;
 using RouteMatcher.Abstractions;
-using RouteMatcher.Enums;
 using RouteMatcher.IPMatchers;
 using System.IO;
 using System.Net;
@@ -10,8 +9,8 @@ namespace RouteMatcher.Benchmark
 	[MemoryDiagnoser, RankColumn]
 	public class IPMatcherBenchmark
 	{
-		private readonly IPMatcherHash _hash;
-		private readonly IPMatcherTrie _trie;
+		private readonly IPMatcherHash<Rule> _hash;
+		private readonly IPMatcherTrie<Rule> _trie;
 
 		public IPMatcherBenchmark()
 		{
@@ -20,15 +19,15 @@ namespace RouteMatcher.Benchmark
 		}
 
 		[Benchmark]
-		public IPMatcherHash LoadHash()
+		public IPMatcherHash<Rule> LoadHash()
 		{
-			return LoadBase<IPMatcherHash>();
+			return LoadBase<IPMatcherHash<Rule>>();
 		}
 
 		[Benchmark]
-		public IPMatcherTrie LoadTrie()
+		public IPMatcherTrie<Rule> LoadTrie()
 		{
-			return LoadBase<IPMatcherTrie>();
+			return LoadBase<IPMatcherTrie<Rule>>();
 		}
 
 		[Benchmark(Baseline = true)]
@@ -59,7 +58,7 @@ namespace RouteMatcher.Benchmark
 			tree.Match(IPAddress.Parse(@"192.168.20.19"));
 		}
 
-		private static T LoadBase<T>() where T : IIPAddressMatcher<IPAddress, Rule>, new()
+		private static T LoadBase<T>() where T : IIPAddressMatcher<Rule>, new()
 		{
 			var res = new T();
 			var lines = File.ReadAllLines(@"china_ipv4_ipv6_list.txt");

@@ -1,5 +1,4 @@
 using RouteMatcher.Abstractions;
-using RouteMatcher.Enums;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -7,11 +6,11 @@ using System.Net.Sockets;
 
 namespace RouteMatcher.IPMatchers
 {
-	public class IPMatcherTrie : IIPAddressMatcher<IPAddress, Rule>
+	public class IPMatcherTrie<TResult> : IIPAddressMatcher<TResult> where TResult : struct
 	{
 		private class Node
 		{
-			public Rule Result { get; set; }
+			public TResult Result { get; set; }
 			public Node?[]? Children { get; set; }
 
 			[MemberNotNull(nameof(Children))]
@@ -25,7 +24,7 @@ namespace RouteMatcher.IPMatchers
 		private readonly byte[] _buffer = new byte[16];
 		private readonly bool[] _bitBuffer = new bool[16 * 8];
 
-		public void Update(IPAddress data, byte netmask, Rule result)
+		public void Update(IPAddress data, byte netmask, TResult result)
 		{
 			Init(data, ref netmask, _bitBuffer);
 			var bits = _bitBuffer.AsSpan(0, netmask);
@@ -46,7 +45,7 @@ namespace RouteMatcher.IPMatchers
 			root.Result = result;
 		}
 
-		public Rule Match(IPAddress data)
+		public TResult Match(IPAddress data)
 		{
 			var netmask = data.AddressFamily == AddressFamily.InterNetwork ? (byte)32 : (byte)128;
 
@@ -63,7 +62,7 @@ namespace RouteMatcher.IPMatchers
 
 				if (children?[index] is not null)
 				{
-					if (!Equals(root.Result, default(Rule)))
+					if (!Equals(root.Result, default(TResult)))
 					{
 						cacheRule = root.Result;
 					}
@@ -76,7 +75,7 @@ namespace RouteMatcher.IPMatchers
 				}
 			}
 
-			if (!Equals(root.Result, default(Rule)))
+			if (!Equals(root.Result, default(TResult)))
 			{
 				cacheRule = root.Result;
 			}

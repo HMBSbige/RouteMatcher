@@ -2,7 +2,7 @@ using System;
 
 namespace RouteMatcher
 {
-	public static class Extensions
+	internal static class Extensions
 	{
 		public static void GetBits(this Span<bool> res, byte b)
 		{
