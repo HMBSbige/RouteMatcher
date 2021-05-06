@@ -21,7 +21,7 @@ jobs:
 
     - name: Test
       shell: pwsh
-      run: dotnet test -c Release
+      run: dotnet test -c Release --filter Name!~Benchmark
 
   build:
     name: Build
